@@ -224,10 +224,53 @@
         </div>
     </div>
     <div id="map-container"></div>
+
+    <!-- Welcome / intro modal — shown on every page load, dismissed by button only -->
+    <div id="welcome-overlay">
+        <div id="welcome-panel" role="dialog" aria-modal="true" aria-labelledby="welcome-title">
+            <h1 id="welcome-title">Predicting NYC Lifelines</h1>
+            <p id="welcome-subtitle">A Platform Displaying Block Group-Level Life Expectancy Predicted Through Machine Learning</p>
+            <p id="welcome-text">
+                Life expectancy is a value that refers to the average number of years a person is expected to live. In traditional life expectancy calculations, most life expectancy estimates are derived from one special life table (age-specific mortality rates &amp; probability of dying at each age). But in this project, block group-level life expectancy of New York City is predicted through an algorithm called Random Forest Regression, which combines life expectancy with various types of indicators.
+            </p>
+            <p id="welcome-usage">
+                Each block group is colored by its predicted value, revealing sharp differences between neighborhoods. Click any block group to open a detailed panel of the factors behind its score. You can also explore health-related factors such as air quality, tree density, and income, and read an AI-generated summary of each area.
+            </p>
+            <div id="welcome-process-row">
+                <img id="welcome-chart" src="img/chart.png" alt="Flowchart of the life expectancy prediction process: census tract features such as house value, median income, rent, education, poverty, restaurant density, assessed total, residential and commercial FAR, tree density and average building height are fed into a Random Forest Regression model trained on 2020 census tract data, which predicts 2024 block group-level life expectancy.">
+                <div id="welcome-process-col">
+                    <p id="welcome-process">
+                        The life expectancy values shown on the map are predicted at the block group level. The prediction model was built from census tract-level data using Random Forest Regression. Suitable features for predicting life expectancy were selected through the SelectKBest function, and these features are: house value, median income, rent, % less than high school, poverty, restaurant density, assesstot, residential FAR, commercial FAR, tree density, and average building height. The model was trained on 2020 New York City census tract data, then applied to predict 2024 block group-level life expectancy.
+                    </p>
+                    <button id="welcome-close" type="button">Enter</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Small corner button that reopens the intro modal after it is dismissed -->
+    <button id="welcome-reopen" type="button" title="About this project">ℹ About</button>
+
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script src="https://d3js.org/d3.v6.min.js"></script>
     <script src="main.js"></script>
     <script src="map.js"></script>
     <script src="sidebar.js"></script>
+    <script>
+        // Welcome modal: dismissed by the Enter button; reopened by the corner button.
+        var welcomeOverlay = document.getElementById('welcome-overlay');
+        var welcomeClose = document.getElementById('welcome-close');
+        var welcomeReopen = document.getElementById('welcome-reopen');
+        welcomeClose.addEventListener('click', function () {
+            welcomeOverlay.style.display = 'none';
+            welcomeReopen.style.display = 'block';
+        });
+        welcomeReopen.addEventListener('click', function () {
+            welcomeOverlay.style.display = 'block';
+            welcomeReopen.style.display = 'none';
+            welcomeClose.focus();
+        });
+        welcomeClose.focus(); // Enter/Space closes immediately
+    </script>
 </body>
 </html>

@@ -5,37 +5,32 @@ import OpenAI from 'openai';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
 dotenv.config();
 
-const geojsonPath = path.join(__dirname, 'data', 'bg_with_neighborlife.geojson');
+// Resolve the GeoJSON path robustly: people sometimes start the server from a
+// different directory, and on Vercel the whole project (including data/) is
+// deployed next to the function. Try the working directory first, then fall
+// back to the location of this file.
+const geojsonCandidates = [
+    path.join(process.cwd(), 'data', 'bg_with_neighborlife.geojson'),
+    path.join(path.dirname(fileURLToPath(import.meta.url)), 'data', 'bg_with_neighborlife.geojson')
+];
 let geojsonData = null;
 
-try {
-    const rawData = fs.readFileSync(geojsonPath, 'utf8');
-    geojsonData = JSON.parse(rawData);
-    console.log('✅ GeoJSON loaded successfully.');
-} catch (error) {
-    console.error('❌ Failed to load GeoJSON:', error);
+for (const geojsonPath of geojsonCandidates) {
+    try {
+        geojsonData = JSON.parse(fs.readFileSync(geojsonPath, 'utf8'));
+        console.log('✅ GeoJSON loaded successfully from', geojsonPath);
+        break;
+    } catch (error) {
+        console.error('❌ Failed to load GeoJSON from', geojsonPath, ':', error.message);
+    }
 }
 
 const app = express();
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'https://xywang1010.github.io');
-  res.header('Access-Control-Allow-Methods', 'GET, POST');
-  res.header('Access-Control-Allow-Headers', 'Content-Type');
-  next();
-});
-const corsOptions = {
-  origin: 'https://xywang1010.github.io',
-  methods: ['GET', 'POST'],
-  allowedHeaders: ['Content-Type'],
-};
-
-app.use(cors(corsOptions));
+// Allow all origins: on Vercel the frontend and the API are served from the
+// same domain, and this also keeps local development working.
+app.use(cors());
 app.use(express.json());
 
 const openai = new OpenAI({
@@ -147,6 +142,10 @@ try {
         if (typeof realLE === 'number') {
             leAnalysis = analyzeLifeExpectancy(realLE, name, tract, geoID, geojson, neighbor_geoids);
         }
+    }
+
+    if (!leAnalysis) {
+        return res.status(400).json({ error: 'Could not match this block group in the dataset.' });
     }
 
 // life expectancy
@@ -387,7 +386,7 @@ ${anomaly}
 
 } catch (error) {
     console.error('🔥 OpenAI or file error:', error);
-    res.status(500).json({ error: 'Failed to generate description.' });
+    res.status(500).json({ error: 'Failed to generate description.', detail: error.message });
 }
 });
 
@@ -395,7 +394,13 @@ app.get('/', (req, res) => {
   res.send('Server is running.');
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`✅ Server running at http://localhost:${PORT}`);
-});
+export default app;
+
+// On Vercel the app runs as a serverless function via api/index.js.
+// Only start a local server when NOT running on Vercel.
+if (!process.env.VERCEL) {
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => {
+        console.log(`✅ Server running at http://localhost:${PORT}`);
+    });
+}

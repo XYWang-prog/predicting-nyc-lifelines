@@ -7,21 +7,21 @@
         });
 
         // Add the black and white tile layer
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png?key=cb1_3huw_1_8d8836dd4b0a898af9b813ee', {
             attribution: '©OpenStreetMap, ©CartoDB'
         }).addTo(map);
 
         function getColor(d){
-            return d > 84.5322 ? '#2b83ba' :
-                d > 83.0792 ? '#64abb0' :
-                d > 81.9826  ? '#9dd3a6' :
-                d > 81.0332 ? '#c7e8ad' :
-                d > 80.1584 ? '#ecf7b9' :
-                d > 79.4123 ? '#ffedaa' :
-                d > 78.6148 ? '#fec980' :
-                d > 77.5021 ? '#f99d59' :
-                d > 75.9455 ? '#e85b3b' : 
-                d > 74.0618 ? '#d7191c' : '#d7191c';
+            return d > 84.5322 ? '#440154' :
+                d > 83.0792 ? '#482372' :
+                d > 81.9826  ? '#433f83' :
+                d > 81.0332 ? '#39598c' :
+                d > 80.1584 ? '#2e718e' :
+                d > 79.4123 ? '#25878d' :
+                d > 78.6148 ? '#1f9e89' :
+                d > 77.5021 ? '#31b37c' :
+                d > 75.9455 ? '#5dc665' :
+                d > 74.0618 ? '#94d647' : '#94d647';
         }
 
 // box plot
@@ -275,7 +275,10 @@
             document.getElementById('info-rent').innerText = "Rent: " + feature.properties['rent'].toFixed(1) + " dollars per year";
 
 // openai api
-            const apiUrl='https://predicting-nyc-lifelines.onrender.com/api/generate';
+            // On Vercel the API runs on the same domain as the page; locally use the dev server.
+            const apiUrl = (location.protocol === 'file:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+                ? 'http://localhost:3000/api/generate'
+                : '/api/generate';
 
             fetch(apiUrl, {
                 method: 'POST',
@@ -514,8 +517,8 @@
                     .attr("height", rows *(cellSize + cellPadding));
 
                     const thresholds = [74.0618, 75.9455, 77.5021, 78.6148, 79.4123, 80.1584, 81.0332, 81.9826, 83.0792, 84.5322];
-                    const colors = ['#d7191c','#d7191c', '#e85b3b', '#f99d59', '#fec980', '#ffedaa',
-                                    '#ecf7b9', '#c7e8ad', '#9dd3a6', '#64abb0', '#2b83ba'];
+                    const colors = ['#94d647','#94d647', '#5dc665', '#31b37c', '#1f9e89', '#25878d',
+                                    '#2e718e', '#39598c', '#433f83', '#482372', '#440154'];
 
                     const colorScale = d3.scaleThreshold()
                         .domain(thresholds)
@@ -696,8 +699,8 @@
                         // color
                         const lifeExtent = d3.extent(filtered, d => d.properties['Life Expectancy']);
                         const thresholds = [75.9455, 77.5021, 78.6148, 79.4123, 80.1584, 81.0332, 81.9826, 83.0792, 84.5322];
-                        const colors = ['#d7191c', '#e85b3b', '#f99d59', '#fec980', '#ffedaa',
-                                    '#ecf7b9', '#c7e8ad', '#9dd3a6', '#64abb0', '#2b83ba'];
+                        const colors = ['#94d647', '#5dc665', '#31b37c', '#1f9e89', '#25878d',
+                                    '#2e718e', '#39598c', '#433f83', '#482372', '#440154'];
                         const color = d3.scaleThreshold()
                             .domain(thresholds)
                             .range(colors);
@@ -1007,8 +1010,8 @@
                         // color
                         const lifeExtent = d3.extent(filtered, d => d.properties['Life Expectancy']);
                         const thresholds = [75.9455, 77.5021, 78.6148, 79.4123, 80.1584, 81.0332, 81.9826, 83.0792, 84.5322];
-                        const colors = ['#d7191c', '#e85b3b', '#f99d59', '#fec980', '#ffedaa',
-                                    '#ecf7b9', '#c7e8ad', '#9dd3a6', '#64abb0', '#2b83ba'];
+                        const colors = ['#94d647', '#5dc665', '#31b37c', '#1f9e89', '#25878d',
+                                    '#2e718e', '#39598c', '#433f83', '#482372', '#440154'];
                         const color = d3.scaleThreshold()
                             .domain(thresholds)
                             .range(colors);
@@ -1313,8 +1316,8 @@
                         // color
                         const lifeExtent = d3.extent(filtered, d => d.properties['Life Expectancy']);
                         const thresholds = [75.9455, 77.5021, 78.6148, 79.4123, 80.1584, 81.0332, 81.9826, 83.0792, 84.5322];
-                        const colors = ['#d7191c', '#e85b3b', '#f99d59', '#fec980', '#ffedaa',
-                                    '#ecf7b9', '#c7e8ad', '#9dd3a6', '#64abb0', '#2b83ba'];
+                        const colors = ['#94d647', '#5dc665', '#31b37c', '#1f9e89', '#25878d',
+                                    '#2e718e', '#39598c', '#433f83', '#482372', '#440154'];
                         const color = d3.scaleThreshold()
                             .domain(thresholds)
                             .range(colors);
@@ -1618,8 +1621,8 @@
                             // color
                             const lifeExtent = d3.extent(filtered, d => d.properties['Life Expectancy']);
                             const thresholds = [75.9455, 77.5021, 78.6148, 79.4123, 80.1584, 81.0332, 81.9826, 83.0792, 84.5322];
-                            const colors = ['#d7191c', '#e85b3b', '#f99d59', '#fec980', '#ffedaa',
-                                        '#ecf7b9', '#c7e8ad', '#9dd3a6', '#64abb0', '#2b83ba'];
+                            const colors = ['#94d647', '#5dc665', '#31b37c', '#1f9e89', '#25878d',
+                                        '#2e718e', '#39598c', '#433f83', '#482372', '#440154'];
                             const color = d3.scaleThreshold()
                                 .domain(thresholds)
                                 .range(colors);
@@ -1923,8 +1926,8 @@
                         // color
                         const lifeExtent = d3.extent(filtered, d => d.properties['Life Expectancy']);
                         const thresholds = [75.9455, 77.5021, 78.6148, 79.4123, 80.1584, 81.0332, 81.9826, 83.0792, 84.5322];
-                        const colors = ['#d7191c', '#e85b3b', '#f99d59', '#fec980', '#ffedaa',
-                                    '#ecf7b9', '#c7e8ad', '#9dd3a6', '#64abb0', '#2b83ba'];
+                        const colors = ['#94d647', '#5dc665', '#31b37c', '#1f9e89', '#25878d',
+                                    '#2e718e', '#39598c', '#433f83', '#482372', '#440154'];
                         const color = d3.scaleThreshold()
                             .domain(thresholds)
                             .range(colors);
@@ -2229,8 +2232,8 @@
                         // color
                         const lifeExtent = d3.extent(filtered, d => d.properties['Life Expectancy']);
                         const thresholds = [75.9455, 77.5021, 78.6148, 79.4123, 80.1584, 81.0332, 81.9826, 83.0792, 84.5322];
-                        const colors = ['#d7191c', '#e85b3b', '#f99d59', '#fec980', '#ffedaa',
-                                    '#ecf7b9', '#c7e8ad', '#9dd3a6', '#64abb0', '#2b83ba'];
+                        const colors = ['#94d647', '#5dc665', '#31b37c', '#1f9e89', '#25878d',
+                                    '#2e718e', '#39598c', '#433f83', '#482372', '#440154'];
                         const color = d3.scaleThreshold()
                             .domain(thresholds)
                             .range(colors);
@@ -2535,8 +2538,8 @@
                         // color
                         const lifeExtent = d3.extent(filtered, d => d.properties['Life Expectancy']);
                         const thresholds = [75.9455, 77.5021, 78.6148, 79.4123, 80.1584, 81.0332, 81.9826, 83.0792, 84.5322];
-                        const colors = ['#d7191c', '#e85b3b', '#f99d59', '#fec980', '#ffedaa',
-                                    '#ecf7b9', '#c7e8ad', '#9dd3a6', '#64abb0', '#2b83ba'];
+                        const colors = ['#94d647', '#5dc665', '#31b37c', '#1f9e89', '#25878d',
+                                    '#2e718e', '#39598c', '#433f83', '#482372', '#440154'];
                         const color = d3.scaleThreshold()
                             .domain(thresholds)
                             .range(colors);
