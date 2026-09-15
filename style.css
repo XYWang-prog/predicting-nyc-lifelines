@@ -477,3 +477,105 @@ margin-top: 20px;
     position: absolute;
     z-index: 99999;
 }
+
+/* Welcome intro modal */
+#welcome-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);   /* semi-transparent darkness over whole page */
+    z-index: 100000;                   /* above d3 .tooltip (99999) and Leaflet controls */
+}
+#welcome-panel {
+    position: absolute;
+    top: 40px;                         /* at the top of the screen */
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 32px);          /* 16px gutter each side on small screens */
+    max-width: 1200px;                 /* wide enough for text + side image, still readable */
+    box-sizing: border-box;
+    background: #ffffff;               /* fully opaque, 0 transparency */
+    border: 1.5px solid #ddd;
+    border-radius: 8px;
+    padding: 24px 28px;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+    z-index: 100001;
+    max-height: calc(100vh - 80px);    /* scroll inside on short screens */
+    overflow-y: auto;
+    text-align: left;                  /* title, subtitle and paragraphs all left-aligned */
+}
+#welcome-panel h1 {
+    font-family: Orbitron, sans-serif;
+    font-size: 24px;
+    margin: 0 0 12px 0;
+    color: #222;
+}
+#welcome-subtitle {
+    font-family: Orbitron, sans-serif;
+    font-size: 17px;                   /* bigger than before, still under the 24px h1 */
+    font-weight: bold;
+    line-height: 1.5;
+    color: #333;
+    margin: -6px 0 14px 0;   /* tucks up under the h1 */
+}
+#welcome-text,
+#welcome-usage,
+#welcome-process {
+    font-family: Orbitron, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #333;
+    margin: 0 0 20px 0;
+    text-align: left;   /* paragraphs left-aligned inside the panel */
+}
+#welcome-process-row {
+    display: flex;
+    flex-wrap: wrap;        /* image stacks above the text on narrow screens */
+    gap: 24px;
+    align-items: stretch;   /* text column stretches to match the image height */
+    margin-bottom: 20px;
+}
+#welcome-chart {
+    flex: 0 0 520px;        /* fixed image column width */
+    width: 520px;
+    max-width: 100%;        /* falls back to full width on phones */
+    height: auto;
+    align-self: flex-start; /* keep the image's natural aspect ratio */
+}
+#welcome-process-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;  /* pushes the Enter button down to meet the image's bottom edge */
+}
+#welcome-close {
+    display: inline-block;  /* sizes to its content */
+    align-self: center;     /* centered horizontally inside the text column */
+    font-family: Orbitron, sans-serif;
+    font-size: 15px;
+    padding: 10px 28px;
+    background: #222;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+#welcome-close:hover { background: #444; }
+
+/* Corner button that reopens the intro modal after it is dismissed */
+#welcome-reopen {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 100000;      /* above map controls; hidden whenever the modal is open */
+    display: none;        /* appears only after the modal has been closed once */
+    padding: 6px 12px;
+    background: #ffffff;
+    border: 1.5px solid #ddd;
+    border-radius: 16px;
+    font-family: Orbitron, sans-serif;
+    font-size: 13px;
+    color: #222;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+#welcome-reopen:hover { background: #f5f5f5; }
